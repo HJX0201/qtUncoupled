@@ -1,0 +1,10 @@
+/benchmark-builds/
+/benchmark-results/
+/.vs/
+/out/
+/build*/
+*.user
+*.log
+.env
+.env.*
+!.env.example

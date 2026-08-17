@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-08-17T10:41:08.8650988+08:00",
+  "operatingSystem": "Microsoft Windows NT 10.0.19045.0",
+  "processorCount": 12,
+  "jobs": 12,
+  "configuration": "Debug",
+  "actionCount": 200,
+  "repetitions": 5,
+  "warmFileCache": true,
+  "qtVersion": "5.12.10",
+  "qtBuildDirectoryName": "msvc2017_64",
+  "qtSpec": "win32-msvc",
+  "compiler": "Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35225 for x64",
+  "cmake": "cmake version 3.31.6-msvc6",
+  "ninjaVersion": "1.13.0.git.kitware.jobserver-pipe-1"
+}
