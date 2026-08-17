@@ -1,5 +1,9 @@
 function(generate_benchmark_sources variant action_count output_variable)
-    set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated/${variant}")
+    if(ARGC GREATER 3)
+        set(generated_dir "${ARGV3}/${variant}")
+    else()
+        set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated/${variant}")
+    endif()
     file(MAKE_DIRECTORY "${generated_dir}")
 
     set(business_header "${generated_dir}/business_context.h")
