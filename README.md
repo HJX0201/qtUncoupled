@@ -4,6 +4,8 @@
 
 当前机器完成的200功能、5次采样结果见[公开基准报告](docs/benchmark-report.md)，逐次计时见[results.csv](docs/results.csv)。公开材料已移除机器名、用户名和本机绝对路径。
 
+仓库同时提交了可直接阅读和编译的[完整200功能C++源码](published-sources/README.md)：旧方案位于[`direct_binding`](published-sources/direct_binding)，新方案位于[`string_registry`](published-sources/string_registry)。运行基准时仍默认在构建目录生成源码，保证增量测试不会修改Git跟踪文件。
+
 ## 编译速度提升
 
 > 在Qt 5.12.10、MSVC 2022 x64、Debug、200个功能、5次交错采样条件下，`string_registry`的干净编译中位数从 **17.75秒降至6.97秒**，耗时减少 **60.7%**，相当于 **2.55倍编译速度**。
@@ -84,6 +86,20 @@ QAction::trigger()
 ```powershell
 .\Run-Benchmark.ps1 -Quick
 ```
+
+直接编译仓库中已发布的200功能源码：
+
+```powershell
+cmake -S . -B build-published-direct -G Ninja `
+    -DCMAKE_PREFIX_PATH='C:\Qt\Qt5.12.10\5.12.10\msvc2017_64' `
+    -DBENCH_VARIANT=direct_binding `
+    -DBENCH_ACTION_COUNT=200 `
+    -DBENCH_USE_PUBLISHED_SOURCES=ON
+cmake --build build-published-direct
+ctest --test-dir build-published-direct --output-on-failure
+```
+
+将`BENCH_VARIANT`改为`string_registry`即可编译新方案源码。
 
 可调整参数：
 

@@ -11,6 +11,9 @@ set(BENCH_VARIANT "direct_binding" CACHE STRING
 set_property(CACHE BENCH_VARIANT PROPERTY STRINGS
              direct_binding string_registry)
 set(BENCH_ACTION_COUNT "200" CACHE STRING "Number of generated actions")
+option(BENCH_USE_PUBLISHED_SOURCES
+    "Build the checked-in 200-function source snapshot instead of generated build-tree sources"
+    OFF)
 
 set(_valid_variants direct_binding string_registry)
 if(NOT BENCH_VARIANT IN_LIST _valid_variants)
@@ -25,11 +28,28 @@ endif()
 find_package(Qt5 5.12 REQUIRED COMPONENTS Widgets)
 
 include(cmake/GenerateBenchmarkSources.cmake)
-generate_benchmark_sources(
-    "${BENCH_VARIANT}"
-    "${BENCH_ACTION_COUNT}"
-    generated_sources
-)
+if(BENCH_USE_PUBLISHED_SOURCES)
+    if(NOT BENCH_ACTION_COUNT STREQUAL "200")
+        message(FATAL_ERROR
+            "BENCH_USE_PUBLISHED_SOURCES requires BENCH_ACTION_COUNT=200")
+    endif()
+    set(published_source_dir
+        "${CMAKE_CURRENT_SOURCE_DIR}/published-sources/${BENCH_VARIANT}")
+    if(NOT EXISTS "${published_source_dir}/main.cpp")
+        message(FATAL_ERROR
+            "Published source snapshot not found: ${published_source_dir}")
+    endif()
+    file(GLOB generated_sources CONFIGURE_DEPENDS
+        "${published_source_dir}/*.cpp"
+        "${published_source_dir}/*.h"
+    )
+else()
+    generate_benchmark_sources(
+        "${BENCH_VARIANT}"
+        "${BENCH_ACTION_COUNT}"
+        generated_sources
+    )
+endif()
 
 add_executable(compile_bench ${generated_sources})
 target_link_libraries(compile_bench PRIVATE Qt5::Widgets)
@@ -62,4 +82,5 @@ add_test(
 
 message(STATUS "Benchmark variant: ${BENCH_VARIANT}")
 message(STATUS "Generated action count: ${BENCH_ACTION_COUNT}")
+message(STATUS "Use published sources: ${BENCH_USE_PUBLISHED_SOURCES}")
 message(STATUS "Qt version: ${Qt5_VERSION}")
