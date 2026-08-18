@@ -514,7 +514,7 @@ $summaryLines.Add("- **单功能实现变化由 $(Format-Duration $directSingle.
 $summaryLines.Add("- **MOC 数量由 $($mocCounts['direct_binding']) 降为 $($mocCounts['string_registry'])。** 新功能类不依赖 `QObject`、槽函数或 UI，可由菜单、工具栏、脚本和测试共同复用。")
 $summaryLines.Add('- **编译差异是完整重构的综合结果。** 它同时包含字符路由、UI依赖隔离、独立工厂和普通C++功能类的影响，不能全部归因于字符串查找。')
 $summaryLines.Add('')
-$summaryLines.Add('| 干净编译变化 | 单实现增量变化 | UI头变化 | 新方案MOC |')
+$summaryLines.Add('| 干净编译变化 | 单实现增量变化 | UI头变化 | 旧方案MOC |')
 $summaryLines.Add('|---:|---:|---:|---:|')
 $summaryLines.Add("| **$($cleanImprovement.ToString('+0.0;-0.0;0.0', $invariantCulture))%** | **$($singleImprovement.ToString('+0.0;-0.0;0.0', $invariantCulture))%** | **$($uiImprovement.ToString('+0.0;-0.0;0.0', $invariantCulture))%** | **$($mocCounts['string_registry'])** |")
 $summaryLines.Add('')
