@@ -167,6 +167,16 @@ ctest --test-dir build-published-direct --output-on-failure
 
 `benchmark-builds/`和`benchmark-results/`仅用于本地运行并已被Git忽略。原始日志可能包含本机安装路径，不应直接提交；脚本生成的`environment.json`默认不记录机器名、用户名或工具绝对路径。
 
+## 公开发布检查
+
+提交公开变更前运行轻量脱敏检查：
+
+```powershell
+.\scripts\Test-PublicRelease.ps1
+```
+
+检查同时覆盖可提交的工作区文本和完整 Git 历史，只报告疑似问题的位置与类别，不输出匹配内容。维护者还应逐项完成[公开仓库发布检查清单](docs/public-release-checklist.md)，人工审核客户名、组织信息、截图和二进制文件等无法可靠自动判断的内容。
+
 ## 结果解释边界
 
 该测试比较的是完整重构前后架构，差异同时包含字符路由、UI依赖隔离、独立工厂和普通C++功能类的影响，不能把全部编译差异归因于字符串查找。合成项目的百分比也不能直接外推到真实工程。
