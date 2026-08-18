@@ -6,6 +6,8 @@
 
 仓库同时提交了可直接阅读和编译的[完整200功能C++源码](published-sources/README.md)：旧方案位于[`direct_binding`](published-sources/direct_binding)，新方案位于[`string_registry`](published-sources/string_registry)。运行基准时仍默认在构建目录生成源码，保证增量测试不会修改Git跟踪文件。
 
+准备参与开发时，请先阅读[贡献指南](CONTRIBUTING.md)，从最新`main`创建独立分支，并在提交前运行快速验证和脱敏检查。
+
 ## 编译速度提升
 
 > 在Qt 5.12.10、MSVC 2022 x64、Debug、200个功能、5次交错采样条件下，`string_registry`的干净编译中位数从 **17.75秒降至6.97秒**，耗时减少 **60.7%**，相当于 **2.55倍编译速度**。
