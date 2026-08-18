@@ -23,8 +23,6 @@ ninja --version
 
 ## 从 Issue 开始
 
-如果你是第一次参与 GitHub 协作，可以先跟随[GitHub Bug 修复协作实战](docs/collaboration-tutorial.md)，通过真实教学 Issue 完成 Fork、修复、Pull Request、Code Review 和合并流程。
-
 1. 在开始修改前阅读对应 Issue 的目标、范围和验收标准，并确认没有已存在的 Pull Request 重复处理该问题。
 2. 将本地 `main` 更新到远程最新状态。
 3. 从最新 `main` 创建一个只服务于该 Issue 的分支，不要直接在 `main` 上开发。
