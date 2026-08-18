@@ -1,5 +1,7 @@
 # Qt 5.12.10 UI功能绑定编译基准
 
+[![Windows CI](https://github.com/HJX0201/qtUncoupled/actions/workflows/windows-ci.yml/badge.svg)](https://github.com/HJX0201/qtUncoupled/actions/workflows/windows-ci.yml)
+
 本项目比较两种真实的UI功能调用架构，只测量编译和链接时间，不测试运行性能或主观耦合度。
 
 当前机器完成的200功能、5次采样结果见[公开基准报告](docs/benchmark-report.md)，逐次计时见[results.csv](docs/results.csv)。公开材料已移除机器名、用户名和本机绝对路径。
@@ -72,6 +74,30 @@ QAction::trigger()
 - Visual Studio 2022 x64编译器
 - CMake、Ninja、C++17
 - 默认Debug、200个功能、5次交错采样
+
+## 持续集成
+
+Pull Request 创建或更新以及推送到 `main` 时，Windows CI 会分别配置、编译并测试 `direct_binding` 和 `string_registry`。CI 固定使用仓库内的 200 功能发布源码，不生成或改写 Git 跟踪文件，也不在共享 runner 上比较性能数据。
+
+本地复现 CI：
+
+```powershell
+$qtPath = 'C:\Qt\Qt5.12.10\5.12.10\msvc2017_64'
+
+foreach ($variant in @('direct_binding', 'string_registry')) {
+    $buildDirectory = "build-ci-$variant"
+    cmake -S . -B $buildDirectory -G Ninja `
+        -DCMAKE_BUILD_TYPE=Debug `
+        "-DCMAKE_PREFIX_PATH=$qtPath" `
+        "-DBENCH_VARIANT=$variant" `
+        -DBENCH_ACTION_COUNT=200 `
+        -DBENCH_USE_PUBLISHED_SOURCES=ON
+    cmake --build $buildDirectory --config Debug --parallel 2
+    ctest --test-dir $buildDirectory --build-config Debug --output-on-failure
+}
+```
+
+上述检查只验证配置、编译和行为等价性。正式性能基准仍应在受控的本地环境中通过 `Run-Benchmark.ps1` 执行。
 
 ## 运行
 

@@ -1,0 +1,62 @@
+name: Windows CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.variant }}
+    runs-on: windows-2022
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        variant:
+          - direct_binding
+          - string_registry
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Configure MSVC environment
+        uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1
+        with:
+          arch: x64
+
+      - name: Install Qt 5.12.10
+        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4.3.1
+        with:
+          version: '5.12.10'
+          host: windows
+          target: desktop
+          arch: win64_msvc2017_64
+          cache: true
+
+      - name: Configure ${{ matrix.variant }}
+        shell: pwsh
+        run: |
+          cmake -S . -B build-ci -G Ninja `
+            -DCMAKE_BUILD_TYPE=Debug `
+            -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR" `
+            -DBENCH_VARIANT=${{ matrix.variant }} `
+            -DBENCH_ACTION_COUNT=200 `
+            -DBENCH_USE_PUBLISHED_SOURCES=ON
+
+      - name: Build ${{ matrix.variant }}
+        shell: pwsh
+        run: cmake --build build-ci --config Debug --parallel 2
+
+      - name: Test ${{ matrix.variant }}
+        shell: pwsh
+        run: ctest --test-dir build-ci --build-config Debug --output-on-failure
